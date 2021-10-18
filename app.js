@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
+const helmet = require('helmet');
 const routes = require('./routes/app');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 
 app.use(requestLogger);
 
+app.use(helmet());
 app.use(cookieParser());
 app.use(cors);
 
