@@ -29,7 +29,9 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Нет карточки с таким id');
+        throw new NotFoundError('Нет фильма с таким id');
+      } else if (!movie.owner.equals(req.user._id)) {
+        throw new ForbiddenError('Нет доступа к фильму');
       }
       return Movie.findByIdAndRemove(movieId)
         .then((deletedMovie) => res.status(200).send(deletedMovie));
@@ -38,9 +40,9 @@ const deleteMovie = (req, res, next) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Введены некорректные данные');
       } else if (err.statusCode === 404) {
-        next(new NotFoundError('Нет карточки с таким id'));
+        next(new NotFoundError('Нет фильма с таким id'));
       } else if (err.statusCode === 403) {
-        next(new ForbiddenError('Нет доступа к карточке'));
+        next(new ForbiddenError('Нет доступа к фильму'));
       }
       throw new ServerError('Произошла ошибка');
     })

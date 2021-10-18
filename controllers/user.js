@@ -75,7 +75,7 @@ const createUser = (req, res, next) => {
       .catch(next);
   });
 };
-const login = (req, res, next) => {
+const logIn = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -99,9 +99,20 @@ const login = (req, res, next) => {
     })
     .catch(next);
 };
+const logOut = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.clearCookie('jwt');
+      res.status(200).send(user);
+    })
+    .catch((err) => { throw new ServerError(err.message); })
+    .catch(next);
+};
+
 module.exports = {
   getUser,
   updateUser,
   createUser,
-  login,
+  logIn,
+  logOut,
 };
