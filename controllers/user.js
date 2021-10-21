@@ -1,9 +1,7 @@
-/* eslint-disable no-shadow */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const ServerError = require('../errors/server-err');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
@@ -24,7 +22,7 @@ const getUser = (req, res, next) => User.findById(req.user._id)
     if (err.name === 'CastError') {
       throw new BadRequestError('Введены некорректные данные');
     } else {
-      throw new ServerError('Произошла ошибка');
+      throw err;
     }
   })
   .catch(next);
@@ -42,8 +40,10 @@ const updateUser = (req, res, next) => User.findByIdAndUpdate(req.user._id, req.
       throw new BadRequestError('Введены некорректные данные');
     } else if (err.name === 'ValidationError') {
       throw new BadRequestError('Ошибка валидации');
+    } else if (err.name === 'MongoServerError') {
+      throw new ConflictError('Такой email уже существует');
     } else {
-      throw new ServerError('Произошла ошибка');
+      throw err;
     }
   })
   .catch(next);
@@ -70,7 +70,7 @@ const createUser = (req, res, next) => {
       .catch((err) => {
         if (err.name === 'ValidationError') {
           throw new BadRequestError('Ошибка валидации');
-        } else throw new ServerError(err.message);
+        } else throw err;
       })
       .catch(next);
   });
@@ -95,7 +95,7 @@ const logIn = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Ошибка валидации');
-      } else throw new UnauthorizedError('Неавторизованно');
+      } else throw new UnauthorizedError('Неправильная почта или пароль');
     })
     .catch(next);
 };
@@ -105,7 +105,7 @@ const logOut = (req, res, next) => {
       res.clearCookie('jwt');
       res.status(200).send(user);
     })
-    .catch((err) => { throw new ServerError(err.message); })
+    .catch((err) => { throw err; })
     .catch(next);
 };
 

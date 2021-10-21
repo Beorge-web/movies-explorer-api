@@ -1,14 +1,13 @@
 const Movie = require('../models/movie');
 
-const ServerError = require('../errors/server-err');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
 const getMovies = (req, res, next) => Movie.find({})
   .then((movies) => res.status(200).send(movies))
-  .catch(() => {
-    throw new ServerError('Произошла ошибка');
+  .catch((err) => {
+    throw err;
   })
   .catch(next);
 const createMovie = (req, res, next) => {
@@ -19,7 +18,7 @@ const createMovie = (req, res, next) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Ошибка валидации');
       } else {
-        throw new ServerError('Произошла ошибка');
+        throw err;
       }
     })
     .catch(next);
@@ -44,7 +43,7 @@ const deleteMovie = (req, res, next) => {
       } else if (err.statusCode === 403) {
         next(new ForbiddenError('Нет доступа к фильму'));
       }
-      throw new ServerError('Произошла ошибка');
+      throw err;
     })
     .catch(next);
 };
