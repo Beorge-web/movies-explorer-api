@@ -15,7 +15,9 @@ require('dotenv').config();
 const { PORT = 4000, DB_URL, NODE_ENV } = process.env;
 const app = express();
 
-mongoose.connect(NODE_ENV === 'production' ? DB_URL : 'mongodb://localhost:27017/freedb');
+mongoose.connect(
+  NODE_ENV === 'production' ? DB_URL : 'mongodb://localhost:27017/moviesdb',
+);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
