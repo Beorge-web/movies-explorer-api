@@ -1,0 +1,43 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "movies-explorer-api",
+  "main": "app.js",
+  "scripts": {
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Beorge-web/movies-explorer-api.git"
+  },
+  "keywords": [],
+  "author": "beorge-web",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Beorge-web/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/Beorge-web/movies-explorer-api#readme",
+  "devDependencies": {
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslit": "^6.0.0",
+    "nodemon": "^2.0.13"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "celebrate": "^15.0.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.5.0",
+    "express-winston": "^4.2.0",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.11",
+    "validator": "^13.6.0",
+    "winston": "^3.3.3"
+  }
+}
