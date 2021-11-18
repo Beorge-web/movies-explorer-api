@@ -4,12 +4,14 @@ const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
-const getMovies = (req, res, next) => Movie.find({})
-  .then((movies) => res.status(200).send(movies))
-  .catch((err) => {
-    throw err;
-  })
-  .catch(next);
+const getMovies = (req, res, next) => {
+  Movie.find({ owner: req.user._id })
+    .then((movies) => res.status(200).send(movies))
+    .catch((err) => {
+      throw err;
+    })
+    .catch(next);
+};
 const createMovie = (req, res, next) => {
   req.body.owner = req.user._id;
   return Movie.create(req.body)
@@ -37,6 +39,7 @@ const deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
+        console.log(err.message);
         throw new BadRequestError('Введены некорректные данные');
       } else if (err.statusCode === 404) {
         next(new NotFoundError('Нет фильма с таким id'));
