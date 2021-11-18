@@ -1,7 +1,6 @@
 module.exports = (req, res, next) => {
   const allowedCors = [
-    'https://beorge.nomoredomains.club',
-    'https://api.beorge.students.nomoredomains.club',
+    'https://beorge-movies.nomoredomains.monster',
     'http://localhost:3000',
   ];
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
