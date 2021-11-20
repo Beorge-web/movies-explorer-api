@@ -59,13 +59,22 @@ const createUser = (req, res, next) => {
       .hash(password, SALT_ROUNDS)
       .then((hash) => {
         req.body.password = hash;
-        return User.create(req.body)
-          .then((newUser) => {
-            const { name, email } = newUser;
-            res.status(200).send({
-              data: { name, email },
-            });
+        return User.create(req.body).then((newUser) => {
+          const { name, email } = newUser;
+          const token = jwt.sign(
+            { _id: newUser._id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+            { expiresIn: '7d' },
+          );
+          res.cookie('jwt', token, {
+            maxAge: 3600000 * 24 * 7,
+            httpOnly: true,
+            sameSite: true,
           });
+          res.status(201).send({
+            data: { name, email },
+          });
+        });
       })
       .catch((err) => {
         if (err.name === 'ValidationError') {
@@ -90,7 +99,7 @@ const logIn = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.status(201).send({ name, email });
+      res.status(200).send({ name, email });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -105,7 +114,9 @@ const logOut = (req, res, next) => {
       res.clearCookie('jwt');
       res.status(200).send(user);
     })
-    .catch((err) => { throw err; })
+    .catch((err) => {
+      throw err;
+    })
     .catch(next);
 };
 
