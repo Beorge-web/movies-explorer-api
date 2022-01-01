@@ -17,7 +17,7 @@ Backend для проекта MoviesExplorer.  Регистрация и авт�
 2. Установите NPM пакеты:
 `npm install`
 3. Запуск проекта:
-`npm run start`
+`npm run dev`
 
 ## Ссылка на проект
 https://api.beorge-movies.nomoredomains.monster/
